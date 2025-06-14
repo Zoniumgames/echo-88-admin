@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Admin - Echo88</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    textarea, input, button {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+    }
+    textarea {
+      height: 150px;
+    }
+    button {
+      background: #e20074;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    h2 {
+      color: #e20074;
+    }
+  </style>
+</head>
+<body>
+  <h2>Panel de Administración</h2>
+  <label>Mensaje de Aviso:</label>
+  <input type="text" id="aviso">
+
+  <label>Canciones Nuevas (una por línea):</label>
+  <textarea id="canciones"></textarea>
+<label>
+  <input type="checkbox" id="mostrarCaja"> Mostrar recuadro lateral
+</label>
+
+  <button onclick="guardarDatos()">💾 Guardar cambios</button>
+
+  <p id="estado"></p>
+
+  <script>
+    const BIN_ID = '684ce02a8561e97a5023f0e8'; // Solo el ID, no la URL completa
+    const API_KEY = '$2a$10$rOYhULeCIqQqevfSQljVuuaE8F1ckttBnNVRqRJ7sdT4IS8.J.zF.'; // Tu clave secreta
+
+    const url = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+    const headers = {
+      'X-Master-Key': API_KEY,
+      'Content-Type': 'application/json'
+    };
+
+    // Cargar datos existentes
+    // Cargar datos existentes
+async function cargarDatos() {
+  try {
+    const res = await fetch(url + '/latest', { headers });
+    const data = await res.json();
+
+    document.getElementById('aviso').value = data.record.aviso;
+    document.getElementById('canciones').value = data.record.nuevasCanciones.join('\n');
+
+    // ✅ Aquí está el FIX: marcar el checkbox correctamente
+    const mostrarCaja = data.record.mostrarCaja !== false; // si es false → desmarcar
+    document.getElementById('mostrarCaja').checked = mostrarCaja;
+  } catch (err) {
+    document.getElementById('estado').textContent = 'Error cargando datos: ' + err.message;
+  }
+}
+
+    // Guardar cambios
+    // Guardar cambios
+async function guardarDatos() {
+  const aviso = document.getElementById('aviso').value.trim();
+  const canciones = document.getElementById('canciones').value.trim().split('\n').map(c => c.trim());
+  const mostrarCaja = document.getElementById('mostrarCaja').checked;
+
+  const cuerpo = {
+    aviso,
+    nuevasCanciones: canciones,
+    mostrarCaja
+  };
+
+  try {
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(cuerpo)
+    });
+
+    if (res.ok) {
+      document.getElementById('estado').textContent = '✅ Cambios guardados correctamente';
+    } else {
+      throw new Error(await res.text());
+    }
+  } catch (err) {
+    document.getElementById('estado').textContent = '❌ Error al guardar: ' + err.message;
+  }
+}
+
+    cargarDatos();
+  </script>
+</body>
+</html>
