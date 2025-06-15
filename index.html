@@ -1,177 +1,349 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Panel Admin - Echo88</title>
+  <title>Echo88 Panel Completo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    body {
-      font-family: sans-serif;
-      background: #111;
-      color: #fff;
-      padding: 2rem;
-      max-width: 600px;
-      margin: auto;
-    }
-    textarea, input, button {
-      width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.6rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: none;
-    }
-    textarea {
-      height: 150px;
-    }
-    button {
-      background: #e20074;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    h2 {
-      color: #e20074;
-    }
+    :root {
+      --rosa: #e20074;
+      --gris-oscuro: #111;
+      --gris-claro: #1a1a1a;
+      --borde: #333;
+      --blanco: #fff;
+    }* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--gris-oscuro);
+  color: var(--blanco);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background: var(--gris-claro);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--borde);
+}
+
+header h1 { font-size: 1.5rem; color: var(--rosa); }
+
+header button {
+  background: none;
+  border: 2px solid var(--rosa);
+  color: var(--rosa);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+header button:hover {
+  background: var(--rosa);
+  color: var(--blanco);
+}
+
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.panel {
+  background: var(--gris-claro);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+.panel-principal { flex-basis: 60%; min-width: 300px; }
+.panel-usuarios { flex-basis: 35%; min-width: 250px; }
+
+h2 { color: var(--rosa); margin-bottom: 1rem; }
+textarea, input {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--borde);
+  background: #121212;
+  color: var(--blanco);
+}
+
+label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+
+button.save-btn, .toggle-btn {
+  background: var(--rosa);
+  border: none;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+ul { list-style: none; padding: 0; }
+
+ul li {
+  background: #191919;
+  margin-bottom: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-status { font-size: 0.9rem; }
+.activo { color: limegreen; }
+.inactivo { color: gray; }
+
+.config-panel {
+  display: none;
+  padding: 1.5rem;
+  margin: 2rem;
+  border-radius: 8px;
+  background: var(--gris-claro);
+  border: 1px solid var(--borde);
+}
+
+.config-panel.active { display: block; animation: fade-in 0.3s ease-in-out; }
+
+.config-panel h3 { margin-top: 1rem; color: var(--rosa); }
+.config-panel button { margin-top: 0.5rem; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .dashboard { flex-direction: column; padding: 1rem; }
+}
+button {
+  background: var(--rosa);
+  border: none;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
   </style>
 </head>
 <body>
-  <h2>Panel de Administración</h2>
-  <label>Mensaje de Aviso:</label>
-  <input type="text" id="aviso">
+  <header>
+    <h1><i class="fas fa-sliders-h"></i> Echo88 Dashboard</h1>
+    <button class="toggle-btn" onclick="toggleConfig()">
+      <i class="fas fa-cog"></i> Opciones
+    </button>
+  </header>  <div class="dashboard">
+    <div class="panel panel-principal">
+      <h2><i class="fas fa-bullhorn"></i> Aviso y Canciones Nuevas</h2>
+      <label for="aviso">Mensaje de aviso:</label>
+      <input type="text" id="aviso"><label for="canciones">Canciones nuevas (una por línea):</label>
+  <textarea id="canciones" rows="6"></textarea>
 
-  <label>Canciones Nuevas (una por línea):</label>
-  <textarea id="canciones"></textarea>
-<label>
-  <input type="checkbox" id="mostrarCaja"> Mostrar recuadro lateral
-</label>
+  <label><input type="checkbox" id="mostrarCaja"> Mostrar recuadro lateral</label>
+  <button class="save-btn" onclick="guardarDatos()">💾 Guardar cambios</button>
+  <p id="estado" style="margin-top: 1rem;"></p>
+</div>
 
-  <button onclick="guardarDatos()">💾 Guardar cambios</button>
+<div class="panel panel-usuarios">
+  <h2><i class="fas fa-users"></i> Estado de Usuarios</h2>
+  <ul id="user-list"></ul>
+</div>
 
-  <p id="estado"></p>
+  </div>  <div id="configPanel" class="config-panel">
+    <h2>⚙️ Gestión de Usuarios</h2>
+    <h3>➕ Crear usuario</h3>
+    <input type="text" id="nuevo-usuario" placeholder="Nombre de usuario">
+    <input type="password" id="nueva-password" placeholder="Contraseña">
+    <button onclick="crearUsuario()">Crear usuario</button><h3>👤 Lista de usuarios</h3>
+<ul id="admin-user-list"></ul>
 
-<hr style="margin: 2rem 0; border-color: #444;">
-<h2>Usuarios Activos</h2>
-<ul id="user-list" style="list-style: none; padding: 0;"></ul>
+<h3>✏️ Editar contraseña de usuario</h3>
+<select id="editar-usuario"></select>
+<input type="password" id="nueva-pass-editar" placeholder="Nueva contraseña">
+<button onclick="editarPasswordUsuario()">Actualizar contraseña</button>
 
-  <script>
-    const BIN_ID = '684ce02a8561e97a5023f0e8'; // Solo el ID, no la URL completa
-    const API_KEY = '$2a$10$rOYhULeCIqQqevfSQljVuuaE8F1ckttBnNVRqRJ7sdT4IS8.J.zF.'; // Tu clave secreta
+  </div>  <script>
+    const BIN_ID = '684ce02a8561e97a5023f0e8';
+    const BIN_ID_USUARIOS = '684de23a8960c979a5a9f92b';
+    const API_KEY = '$2a$10$rOYhULeCIqQqevfSQljVuuaE8F1ckttBnNVRqRJ7sdT4IS8.J.zF.';
 
     const url = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-    const headers = {
-      'X-Master-Key': API_KEY,
-      'Content-Type': 'application/json'
-    };
+    const urlUsuarios = `https://api.jsonbin.io/v3/b/${BIN_ID_USUARIOS}`;
+    const headers = { 'X-Master-Key': API_KEY, 'Content-Type': 'application/json' };
 
-    // Cargar datos existentes
-    // Cargar datos existentes
-async function cargarDatos() {
+    function toggleConfig() {
+      document.getElementById('configPanel').classList.toggle('active');
+    }
+
+    async function guardarDatos() {
+      const aviso = document.getElementById('aviso').value.trim();
+      const canciones = document.getElementById('canciones').value.trim().split('\n').map(c => c.trim());
+      const mostrarCaja = document.getElementById('mostrarCaja').checked;
+
+      try {
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({ aviso, nuevasCanciones: canciones, mostrarCaja })
+        });
+        document.getElementById('estado').textContent = res.ok ? '✅ Cambios guardados' : '❌ Error al guardar';
+      } catch (err) {
+        document.getElementById('estado').textContent = '❌ Error: ' + err.message;
+      }
+    }
+
+    async function cargarDatos() {
+      try {
+        const res = await fetch(url + '/latest', { headers });
+        const data = await res.json();
+        document.getElementById('aviso').value = data.record.aviso || '';
+        document.getElementById('canciones').value = (data.record.nuevasCanciones || []).join('\n');
+        document.getElementById('mostrarCaja').checked = data.record.mostrarCaja !== false;
+      } catch (err) {
+        console.error('Error cargando aviso/canciones:', err);
+      }
+    }
+
+    async function cargarUsuarios() {
   try {
-    const res = await fetch(url + '/latest', { headers });
+    const res = await fetch(urlUsuarios + '/latest', { headers });
     const data = await res.json();
+    const lista = document.getElementById('user-list');
+    const adminLista = document.getElementById('admin-user-list');
+    const selectEditar = document.getElementById('editar-usuario');
+    lista.innerHTML = '';
+    adminLista.innerHTML = '';
+    selectEditar.innerHTML = '';
 
-    document.getElementById('aviso').value = data.record.aviso;
-    document.getElementById('canciones').value = data.record.nuevasCanciones.join('\n');
+    data.record.usuarios.forEach((u, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${u.usuario}</span><span class="user-status ${u.activo ? 'activo' : 'inactivo'}">${u.activo ? '🟢 Activo' : '⚪ Inactivo'}</span>`;
+      lista.appendChild(li);
 
-    // ✅ Aquí está el FIX: marcar el checkbox correctamente
-    const mostrarCaja = data.record.mostrarCaja !== false; // si es false → desmarcar
-    document.getElementById('mostrarCaja').checked = mostrarCaja;
+      const adminLi = document.createElement('li');
+      adminLi.innerHTML = `
+        <span>${u.usuario}</span>
+        <div>
+          ${u.activo ? `<button onclick=\"forzarLogout(${i})\">🔓</button>` : ''}
+          <button onclick=\"eliminarUsuario(${i})\">🗑️</button>
+        </div>`;
+      adminLista.appendChild(adminLi);
+
+      const opt = document.createElement('option');
+      opt.value = u.usuario;
+      opt.textContent = u.usuario;
+      selectEditar.appendChild(opt);
+    });
   } catch (err) {
-    document.getElementById('estado').textContent = 'Error cargando datos: ' + err.message;
+    console.error('Error cargando usuarios:', err);
   }
 }
 
-    // Guardar cambios
-    // Guardar cambios
-async function guardarDatos() {
-  const aviso = document.getElementById('aviso').value.trim();
-  const canciones = document.getElementById('canciones').value.trim().split('\n').map(c => c.trim());
-  const mostrarCaja = document.getElementById('mostrarCaja').checked;
+    async function crearUsuario() {
+      const nombre = document.getElementById('nuevo-usuario').value.trim();
+      const pass = document.getElementById('nueva-password').value.trim();
+      if (!nombre || !pass) return alert("⚠️ Ingrese nombre y contraseña");
 
-  const cuerpo = {
-    aviso,
-    nuevasCanciones: canciones,
-    mostrarCaja
-  };
+      try {
+        const res = await fetch(urlUsuarios + '/latest', { headers });
+        const data = await res.json();
+        const usuarios = data.record.usuarios;
+
+        if (usuarios.some(u => u.usuario === nombre)) return alert("❌ Ese usuario ya existe");
+
+        usuarios.push({ usuario: nombre, password: pass, activo: false });
+        await fetch(urlUsuarios, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({ ...data.record, usuarios })
+        });
+
+        document.getElementById('nuevo-usuario').value = '';
+        document.getElementById('nueva-password').value = '';
+        cargarUsuarios();
+      } catch (err) {
+        alert('❌ Error al crear usuario: ' + err.message);
+      }
+    }
+
+    async function eliminarUsuario(index) {
+      if (!confirm("¿Eliminar este usuario?")) return;
+      try {
+        const res = await fetch(urlUsuarios + '/latest', { headers });
+        const data = await res.json();
+        const usuarios = data.record.usuarios;
+        usuarios.splice(index, 1);
+        await fetch(urlUsuarios, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({ ...data.record, usuarios })
+        });
+        cargarUsuarios();
+      } catch (err) {
+        alert("❌ Error al eliminar usuario: " + err.message);
+      }
+    }
+
+    async function forzarLogout(index) {
+      try {
+        const res = await fetch(urlUsuarios + '/latest', { headers });
+        const data = await res.json();
+        data.record.usuarios[index].activo = false;
+        await fetch(urlUsuarios, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify(data.record)
+        });
+        cargarUsuarios();
+      } catch (err) {
+        alert('❌ Error al cerrar sesión: ' + err.message);
+      }
+    }
+    
+
+async function editarPasswordUsuario() {
+  const nombre = document.getElementById('editar-usuario').value;
+  const nuevaPass = document.getElementById('nueva-pass-editar').value.trim();
+  if (!nuevaPass) return alert("❗ Debes ingresar una nueva contraseña");
 
   try {
-    const res = await fetch(url, {
+    const res = await fetch(urlUsuarios + '/latest', { headers });
+    const data = await res.json();
+    const usuarios = data.record.usuarios;
+    const user = usuarios.find(u => u.usuario === nombre);
+    if (!user) return alert("⚠️ Usuario no encontrado");
+
+    user.password = nuevaPass;
+    await fetch(urlUsuarios, {
       method: 'PUT',
       headers,
-      body: JSON.stringify(cuerpo)
+      body: JSON.stringify({ ...data.record, usuarios })
     });
 
-    if (res.ok) {
-      document.getElementById('estado').textContent = '✅ Cambios guardados correctamente';
-    } else {
-      throw new Error(await res.text());
-    }
+    document.getElementById('nueva-pass-editar').value = '';
+    alert("✅ Contraseña actualizada");
   } catch (err) {
-    document.getElementById('estado').textContent = '❌ Error al guardar: ' + err.message;
+    alert("❌ Error al actualizar: " + err.message);
   }
 }
 
     cargarDatos();
-  </script>
-<script>
-const BIN_ID_USUARIOS = '684de23a8960c979a5a9f92b'; // ID del bin que contiene los usuarios
-const urlUsuarios = `https://api.jsonbin.io/v3/b/${BIN_ID_USUARIOS}`;
-
-async function cargarUsuarios() {
-  try {
-    const res = await fetch(urlUsuarios + '/latest', { headers });
-    const data = await res.json();
-    const usuarios = data.record.usuarios;
-
-    const lista = document.getElementById('user-list');
-    lista.innerHTML = ''; // Limpiar la lista
-
-    usuarios.forEach((u, i) => {
-      const li = document.createElement('li');
-      li.style.marginBottom = '1rem';
-
-      li.innerHTML = `
-        <strong>${u.usuario}</strong><br>
-        Estado: <span style="color:${u.activo ? 'limegreen' : 'gray'};">
-          ${u.activo ? 'Activo 🟢' : 'Inactivo ⚪'}
-        </span>
-        ${u.activo ? `<br><button onclick="forzarLogout(${i})" style="margin-top:0.5rem;">🔓 Desconectar</button>` : ''}
-      `;
-
-      lista.appendChild(li);
-    });
-  } catch (err) {
-    document.getElementById('estado').textContent = '❌ Error cargando usuarios: ' + err.message;
-  }
-}
-
-async function forzarLogout(index) {
-  if (!confirm("¿Cerrar la sesión de este usuario?")) return;
-
-  try {
-    const res = await fetch(urlUsuarios + '/latest', { headers });
-    const data = await res.json();
-    const usuarios = data.record.usuarios;
-
-    if (usuarios[index]) {
-      usuarios[index].activo = false;
-
-      await fetch(urlUsuarios, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify({ ...data.record, usuarios })
-      });
-
-      alert('✅ Usuario desconectado correctamente.');
-      cargarUsuarios(); // recargar lista
-    }
-  } catch (err) {
-    alert('❌ Error al desconectar usuario: ' + err.message);
-  }
-}
-
-// Ejecutar al cargar el panel
-cargarUsuarios();
-</script>
-</body>
+    cargarUsuarios();
+  </script></body>
 </html>
