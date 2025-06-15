@@ -49,6 +49,10 @@
 
   <p id="estado"></p>
 
+<hr style="margin: 2rem 0; border-color: #444;">
+<h2>Usuarios Activos</h2>
+<ul id="user-list" style="list-style: none; padding: 0;"></ul>
+
   <script>
     const BIN_ID = '684ce02a8561e97a5023f0e8'; // Solo el ID, no la URL completa
     const API_KEY = '$2a$10$rOYhULeCIqQqevfSQljVuuaE8F1ckttBnNVRqRJ7sdT4IS8.J.zF.'; // Tu clave secreta
@@ -109,5 +113,65 @@ async function guardarDatos() {
 
     cargarDatos();
   </script>
+<script>
+const BIN_ID_USUARIOS = '684de23a8960c979a5a9f92b'; // ID del bin que contiene los usuarios
+const urlUsuarios = `https://api.jsonbin.io/v3/b/${BIN_ID_USUARIOS}`;
+
+async function cargarUsuarios() {
+  try {
+    const res = await fetch(urlUsuarios + '/latest', { headers });
+    const data = await res.json();
+    const usuarios = data.record.usuarios;
+
+    const lista = document.getElementById('user-list');
+    lista.innerHTML = ''; // Limpiar la lista
+
+    usuarios.forEach((u, i) => {
+      const li = document.createElement('li');
+      li.style.marginBottom = '1rem';
+
+      li.innerHTML = `
+        <strong>${u.usuario}</strong><br>
+        Estado: <span style="color:${u.activo ? 'limegreen' : 'gray'};">
+          ${u.activo ? 'Activo 🟢' : 'Inactivo ⚪'}
+        </span>
+        ${u.activo ? `<br><button onclick="forzarLogout(${i})" style="margin-top:0.5rem;">🔓 Desconectar</button>` : ''}
+      `;
+
+      lista.appendChild(li);
+    });
+  } catch (err) {
+    document.getElementById('estado').textContent = '❌ Error cargando usuarios: ' + err.message;
+  }
+}
+
+async function forzarLogout(index) {
+  if (!confirm("¿Cerrar la sesión de este usuario?")) return;
+
+  try {
+    const res = await fetch(urlUsuarios + '/latest', { headers });
+    const data = await res.json();
+    const usuarios = data.record.usuarios;
+
+    if (usuarios[index]) {
+      usuarios[index].activo = false;
+
+      await fetch(urlUsuarios, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ ...data.record, usuarios })
+      });
+
+      alert('✅ Usuario desconectado correctamente.');
+      cargarUsuarios(); // recargar lista
+    }
+  } catch (err) {
+    alert('❌ Error al desconectar usuario: ' + err.message);
+  }
+}
+
+// Ejecutar al cargar el panel
+cargarUsuarios();
+</script>
 </body>
 </html>
