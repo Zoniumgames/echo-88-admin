@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Echo88 Panel Completo</title>
+  <title>Echo88fm - Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
@@ -13,15 +13,23 @@
       --borde: #333;
       --blanco: #fff;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Segoe UI', sans-serif;
       background: var(--gris-oscuro);
       color: var(--blanco);
       min-height: 100vh;
-      display: none;
+      display: flex;
       flex-direction: column;
+      visibility: hidden;
     }
+
+    body.login-active {
+      overflow: hidden;
+    }
+
     header {
       background: var(--gris-claro);
       padding: 1rem 2rem;
@@ -30,7 +38,9 @@
       align-items: center;
       border-bottom: 1px solid var(--borde);
     }
+
     header h1 { font-size: 1.5rem; color: var(--rosa); }
+
     header button {
       background: none;
       border: 2px solid var(--rosa);
@@ -41,16 +51,19 @@
       cursor: pointer;
       transition: background 0.3s, color 0.3s;
     }
+
     header button:hover {
       background: var(--rosa);
       color: var(--blanco);
     }
+
     .dashboard {
       display: flex;
       flex-wrap: wrap;
       padding: 2rem;
       gap: 2rem;
     }
+
     .panel {
       background: var(--gris-claro);
       border: 1px solid var(--borde);
@@ -58,9 +71,12 @@
       padding: 1.5rem;
       flex-grow: 1;
     }
+
     .panel-principal { flex-basis: 60%; min-width: 300px; }
     .panel-usuarios { flex-basis: 35%; min-width: 250px; }
+
     h2 { color: var(--rosa); margin-bottom: 1rem; }
+
     textarea, input {
       width: 100%;
       margin-bottom: 1rem;
@@ -70,7 +86,9 @@
       background: #121212;
       color: var(--blanco);
     }
+
     label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+
     button.save-btn, .toggle-btn {
       background: var(--rosa);
       border: none;
@@ -81,7 +99,9 @@
       cursor: pointer;
       margin-top: 0.5rem;
     }
+
     ul { list-style: none; padding: 0; }
+
     ul li {
       background: #191919;
       margin-bottom: 0.5rem;
@@ -91,9 +111,11 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .user-status { font-size: 0.9rem; }
     .activo { color: limegreen; }
     .inactivo { color: gray; }
+
     .config-panel {
       display: none;
       padding: 1.5rem;
@@ -102,63 +124,51 @@
       background: var(--gris-claro);
       border: 1px solid var(--borde);
     }
+
     .config-panel.active { display: block; animation: fade-in 0.3s ease-in-out; }
-    .config-panel h3 { margin-top: 1rem; color: var(--rosa); }
-    .config-panel button { margin-top: 0.5rem; }
+
     @keyframes fade-in {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     @media (max-width: 768px) {
       .dashboard { flex-direction: column; padding: 1rem; }
     }
-
-    #login-screen {
-      position: fixed;
-      inset: 0;
-      background: black;
-      color: white;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    #login-screen input {
-      padding: 0.6rem;
-      margin-bottom: 0.5rem;
-      border-radius: 6px;
-      border: none;
-      width: 250px;
-    }
-    #login-screen button {
+    
+    button {
       background: var(--rosa);
-      color: white;
       border: none;
-      padding: 0.6rem 1.2rem;
+      color: white;
+      padding: 0.6rem 1rem;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 0.5rem;
     }
-    #login-screen p { margin-top: 1rem; color: tomato; }
   </style>
 </head>
 <body>
-  <div id="login-screen">
-    <h2>Acceso Administrador</h2>
-    <input type="email" id="admin-email" placeholder="Correo">
-    <input type="password" id="admin-password" placeholder="Contraseña">
-    <button onclick="loginAdmin()">Entrar</button>
-    <p id="login-error"></p>
+  <div id="login-screen" style="position: fixed; inset: 0; background: black; color: white; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem; padding: 2rem;">
+    <h2 style="font-size: 1.6rem; color: #e20074;">Echo 88 fm - Settings</h2>
+    <input type="email" id="admin-email" placeholder="Correo" style="padding:0.6rem; border-radius:6px; border:1px solid #444; width:250px; background:#121212; color:white;">
+    <div style="position: relative; width: 250px;">
+      <input type="password" id="admin-password" placeholder="Contraseña" style="padding:0.6rem; border-radius:6px; border:1px solid #444; width:100%; background:#121212; color:white;">
+      <span onclick="togglePassword()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#ccc;">👁️</span>
+    </div>
+    <button onclick="loginAdmin()" style="padding:0.6rem 1.2rem; background:#e20074; color:white; border:none; border-radius:6px; font-weight:bold; width:250px; transition: background 0.3s;">Entrar</button>
+    <p id="login-error" style="margin-top: 0.5rem; color: tomato;"></p>
   </div>
-
+  
   <header>
-    <h1><i class="fas fa-sliders-h"></i> Echo88 Dashboard</h1>
-    <div>
+    <h1><i class="fas fa-sliders-h"></i> Echo88 Admin</h1>
+    <div style="display: flex; gap: 0.5rem;">
       <button class="toggle-btn" onclick="toggleConfig()">
         <i class="fas fa-cog"></i> Opciones
       </button>
-      <button onclick="logout()">Cerrar sesión</button>
+      <button onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+      </button>
     </div>
   </header>
 
@@ -186,223 +196,235 @@
     <input type="text" id="nuevo-usuario" placeholder="Nombre de usuario">
     <input type="password" id="nueva-password" placeholder="Contraseña">
     <button onclick="crearUsuario()">Crear usuario</button>
+
     <h3>👤 Lista de usuarios</h3>
     <ul id="admin-user-list"></ul>
+
     <h3>✏️ Editar contraseña de usuario</h3>
     <select id="editar-usuario"></select>
     <input type="password" id="nueva-pass-editar" placeholder="Nueva contraseña">
     <button onclick="editarPasswordUsuario()">Actualizar contraseña</button>
   </div>
 
-  <!-- Firebase SDK -->
-<!-- Firebase SDK clásico (compat) -->
-<script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-auth-compat.js"></script>
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-auth-compat.js"></script>
 
   <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCjwAH-qGLK9KAL9_vfRRtOq0QqnbAuflM",
-    authDomain: "echo-88-admin.firebaseapp.com",
-    projectId: "echo-88-admin",
-    storageBucket: "echo-88-admin.firebasestorage.app",
-    messagingSenderId: "82783662359",
-    appId: "1:82783662359:web:db5031b38b6acdaf874752",
-    measurementId: "G-BJ97K0VNQE"
-  };
+    document.addEventListener("DOMContentLoaded", () => {
+      const BIN_ID = '684ce02a8561e97a5023f0e8';
+      const BIN_ID_USUARIOS = '684de23a8960c979a5a9f92b';
+      const API_KEY = '$2a$10$rOYhULeCIqQqevfSQljVuuaE8F1ckttBnNVRqRJ7sdT4IS8.J.zF.';
 
-  // Inicializar Firebase (modo compat)
-  firebase.initializeApp(firebaseConfig);
+      const url = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+      const urlUsuarios = `https://api.jsonbin.io/v3/b/${BIN_ID_USUARIOS}`;
+      const headers = { 'X-Master-Key': API_KEY, 'Content-Type': 'application/json' };
 
-    
-function loginAdmin() {
-  const email = document.getElementById('admin-email').value.trim();
-  const password = document.getElementById('admin-password').value.trim();
-  const errorEl = document.getElementById('login-error');
+      const loginScreen = document.getElementById('login-screen');
+      const body = document.body;
 
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => {
-      document.getElementById('login-screen').style.display = 'none';
-      document.body.style.display = 'flex';
-    })
-    .catch(err => {
-      errorEl.textContent = "❌ " + err.message;
+      firebase.initializeApp({
+        apiKey: "AIzaSyCjwAH-qGLK9KAL9_vfRRtOq0QqnbAuflM",
+        authDomain: "echo-88-admin.firebaseapp.com",
+        projectId: "echo-88-admin",
+        storageBucket: "echo-88-admin.appspot.com",
+        messagingSenderId: "82783662359",
+        appId: "1:82783662359:web:db5031b38b6acdaf874752"
+      });
+
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          loginScreen.style.display = 'none';
+          document.body.classList.remove("login-active");
+          cargarDatos();
+          cargarUsuarios();
+        } else {
+          loginScreen.style.display = 'flex';
+          document.body.classList.add("login-active");
+        }
+        body.style.visibility = 'visible';
+      });
+
+      setTimeout(() => {
+        if (body.style.visibility === 'hidden') {
+          body.style.visibility = 'visible';
+        }
+      }, 4000);
+
+      window.loginAdmin = function () {
+        const email = document.getElementById('admin-email').value.trim();
+        const password = document.getElementById('admin-password').value.trim();
+        const errorEl = document.getElementById('login-error');
+
+        firebase.auth().signInWithEmailAndPassword(email, password)
+          .catch(err => {
+            errorEl.textContent = "❌ " + err.message;
+          });
+      };
+
+      window.logout = function () {
+        firebase.auth().signOut().then(() => {
+          document.getElementById('admin-email').value = "";
+          document.getElementById('admin-password').value = "";
+          document.getElementById('login-error').textContent = "";
+        });
+      };
+
+      window.togglePassword = function () {
+        const input = document.getElementById("admin-password");
+        const icon = input.nextElementSibling;
+        const isVisible = input.type === "text";
+        input.type = isVisible ? "password" : "text";
+        icon.textContent = isVisible ? "👁️" : "🚫";
+      };
+
+      window.toggleConfig = function () {
+        document.getElementById('configPanel').classList.toggle('active');
+      };
+
+      window.guardarDatos = async function () {
+        const aviso = document.getElementById('aviso').value.trim();
+        const canciones = document.getElementById('canciones').value.trim().split('\n').map(c => c.trim());
+        const mostrarCaja = document.getElementById('mostrarCaja').checked;
+        try {
+          const res = await fetch(url, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify({ aviso, nuevasCanciones: canciones, mostrarCaja })
+          });
+          document.getElementById('estado').textContent = res.ok ? '✅ Cambios guardados' : '❌ Error al guardar';
+        } catch (err) {
+          document.getElementById('estado').textContent = '❌ Error: ' + err.message;
+        }
+      };
+
+      window.cargarDatos = async function () {
+        try {
+          const res = await fetch(url + '/latest', { headers });
+          const data = await res.json();
+          document.getElementById('aviso').value = data.record.aviso || '';
+          document.getElementById('canciones').value = (data.record.nuevasCanciones || []).join('\n');
+          document.getElementById('mostrarCaja').checked = data.record.mostrarCaja !== false;
+        } catch (err) {
+          console.error('Error cargando aviso/canciones:', err);
+        }
+      };
+
+      window.cargarUsuarios = async function () {
+        try {
+          const res = await fetch(urlUsuarios + '/latest', { headers });
+          const data = await res.json();
+          const lista = document.getElementById('user-list');
+          const adminLista = document.getElementById('admin-user-list');
+          const selectEditar = document.getElementById('editar-usuario');
+          lista.innerHTML = '';
+          adminLista.innerHTML = '';
+          selectEditar.innerHTML = '';
+
+          data.record.usuarios.forEach((u, i) => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${u.usuario}</span><span class="user-status ${u.activo ? 'activo' : 'inactivo'}">${u.activo ? '🟢 Activo' : '⚪ Inactivo'}</span>`;
+            lista.appendChild(li);
+
+            const adminLi = document.createElement('li');
+            adminLi.innerHTML = `<span>${u.usuario}</span><div>${u.activo ? `<button onclick="forzarLogout(${i})">🔓</button>` : ''}<button onclick="eliminarUsuario(${i})">🗑️</button></div>`;
+            adminLista.appendChild(adminLi);
+
+            const opt = document.createElement('option');
+            opt.value = u.usuario;
+            opt.textContent = u.usuario;
+            selectEditar.appendChild(opt);
+          });
+        } catch (err) {
+          console.error('Error cargando usuarios:', err);
+        }
+      };
+
+      window.crearUsuario = async function () {
+        const nombre = document.getElementById('nuevo-usuario').value.trim();
+        const pass = document.getElementById('nueva-password').value.trim();
+        if (!nombre || !pass) return alert("⚠️ Ingrese nombre y contraseña");
+
+        try {
+          const res = await fetch(urlUsuarios + '/latest', { headers });
+          const data = await res.json();
+          const usuarios = data.record.usuarios;
+
+          if (usuarios.some(u => u.usuario === nombre)) return alert("❌ Ese usuario ya existe");
+
+          usuarios.push({ usuario: nombre, password: pass, activo: false });
+          await fetch(urlUsuarios, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify({ ...data.record, usuarios })
+          });
+
+          document.getElementById('nuevo-usuario').value = '';
+          document.getElementById('nueva-password').value = '';
+          cargarUsuarios();
+        } catch (err) {
+          alert('❌ Error al crear usuario: ' + err.message);
+        }
+      };
+
+      window.eliminarUsuario = async function (index) {
+        if (!confirm("¿Eliminar este usuario?")) return;
+        try {
+          const res = await fetch(urlUsuarios + '/latest', { headers });
+          const data = await res.json();
+          data.record.usuarios.splice(index, 1);
+          await fetch(urlUsuarios, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(data.record)
+          });
+          cargarUsuarios();
+        } catch (err) {
+          alert("❌ Error al eliminar usuario: " + err.message);
+        }
+      };
+
+      window.forzarLogout = async function (index) {
+        try {
+          const res = await fetch(urlUsuarios + '/latest', { headers });
+          const data = await res.json();
+          data.record.usuarios[index].activo = false;
+          await fetch(urlUsuarios, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(data.record)
+          });
+          cargarUsuarios();
+        } catch (err) {
+          alert('❌ Error al cerrar sesión: ' + err.message);
+        }
+      };
+
+      window.editarPasswordUsuario = async function () {
+        const nombre = document.getElementById('editar-usuario').value;
+        const nuevaPass = document.getElementById('nueva-pass-editar').value.trim();
+        if (!nuevaPass) return alert("❗ Debes ingresar una nueva contraseña");
+
+        try {
+          const res = await fetch(urlUsuarios + '/latest', { headers });
+          const data = await res.json();
+          const user = data.record.usuarios.find(u => u.usuario === nombre);
+          if (!user) return alert("⚠️ Usuario no encontrado");
+
+          user.password = nuevaPass;
+          await fetch(urlUsuarios, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(data.record)
+          });
+
+          document.getElementById('nueva-pass-editar').value = '';
+          alert("✅ Contraseña actualizada");
+        } catch (err) {
+          alert("❌ Error al actualizar: " + err.message);
+        }
+      };
     });
-}
-
-firebase.auth().onAuthStateChanged(user => {
-  const adminEmail = "admin@tucorreo.com"; // <- tu correo real
-  if (user && user.email === adminEmail) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.body.style.display = 'flex';
-  } else {
-    firebase.auth().signOut();
-    document.getElementById('login-screen').style.display = 'flex';
-    document.body.style.display = 'none';
-  }
-});
-
-function logout() {
-  firebase.auth().signOut().then(() => location.reload());
-}
-
-  
-
-  </script>
-
-  <!-- Tu código original (guardar, cargar, crear usuarios...) -->
-  <script>
-    const BIN_ID = '684ce02a8561e97a5023f0e8';
-    const BIN_ID_USUARIOS = '684de23a8960c979a5a9f92b';
-    const API_KEY = '$2a$10$rOYhULeCIqQqevfSQljVuuaE8F1ckttBnNVRqRJ7sdT4IS8.J.zF.';
-    const url = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-    const urlUsuarios = `https://api.jsonbin.io/v3/b/${BIN_ID_USUARIOS}`;
-    const headers = { 'X-Master-Key': API_KEY, 'Content-Type': 'application/json' };
-
-    function toggleConfig() {
-      document.getElementById('configPanel').classList.toggle('active');
-    }
-
-    async function guardarDatos() {
-      const aviso = document.getElementById('aviso').value.trim();
-      const canciones = document.getElementById('canciones').value.trim().split('\n').map(c => c.trim());
-      const mostrarCaja = document.getElementById('mostrarCaja').checked;
-      try {
-        const res = await fetch(url, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({ aviso, nuevasCanciones: canciones, mostrarCaja })
-        });
-        document.getElementById('estado').textContent = res.ok ? '✅ Cambios guardados' : '❌ Error al guardar';
-      } catch (err) {
-        document.getElementById('estado').textContent = '❌ Error: ' + err.message;
-      }
-    }
-
-    async function cargarDatos() {
-      try {
-        const res = await fetch(url + '/latest', { headers });
-        const data = await res.json();
-        document.getElementById('aviso').value = data.record.aviso || '';
-        document.getElementById('canciones').value = (data.record.nuevasCanciones || []).join('\n');
-        document.getElementById('mostrarCaja').checked = data.record.mostrarCaja !== false;
-      } catch (err) {
-        console.error('Error cargando aviso/canciones:', err);
-      }
-    }
-
-    async function cargarUsuarios() {
-      try {
-        const res = await fetch(urlUsuarios + '/latest', { headers });
-        const data = await res.json();
-        const lista = document.getElementById('user-list');
-        const adminLista = document.getElementById('admin-user-list');
-        const selectEditar = document.getElementById('editar-usuario');
-        lista.innerHTML = '';
-        adminLista.innerHTML = '';
-        selectEditar.innerHTML = '';
-        data.record.usuarios.forEach((u, i) => {
-          const li = document.createElement('li');
-          li.innerHTML = `<span>${u.usuario}</span><span class="user-status ${u.activo ? 'activo' : 'inactivo'}">${u.activo ? '🟢 Activo' : '⚪ Inactivo'}</span>`;
-          lista.appendChild(li);
-          const adminLi = document.createElement('li');
-          adminLi.innerHTML = `<span>${u.usuario}</span>
-            <div>
-              ${u.activo ? `<button onclick="forzarLogout(${i})">🔓</button>` : ''}
-              <button onclick="eliminarUsuario(${i})">🗑️</button>
-            </div>`;
-          adminLista.appendChild(adminLi);
-          const opt = document.createElement('option');
-          opt.value = u.usuario;
-          opt.textContent = u.usuario;
-          selectEditar.appendChild(opt);
-        });
-      } catch (err) {
-        console.error('Error cargando usuarios:', err);
-      }
-    }
-
-    async function crearUsuario() {
-      const nombre = document.getElementById('nuevo-usuario').value.trim();
-      const pass = document.getElementById('nueva-password').value.trim();
-      if (!nombre || !pass) return alert("⚠️ Ingrese nombre y contraseña");
-      try {
-        const res = await fetch(urlUsuarios + '/latest', { headers });
-        const data = await res.json();
-        const usuarios = data.record.usuarios;
-        if (usuarios.some(u => u.usuario === nombre)) return alert("❌ Ese usuario ya existe");
-        usuarios.push({ usuario: nombre, password: pass, activo: false });
-        await fetch(urlUsuarios, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({ ...data.record, usuarios })
-        });
-        document.getElementById('nuevo-usuario').value = '';
-        document.getElementById('nueva-password').value = '';
-        cargarUsuarios();
-      } catch (err) {
-        alert('❌ Error al crear usuario: ' + err.message);
-      }
-    }
-
-    async function eliminarUsuario(index) {
-      if (!confirm("¿Eliminar este usuario?")) return;
-      try {
-        const res = await fetch(urlUsuarios + '/latest', { headers });
-        const data = await res.json();
-        const usuarios = data.record.usuarios;
-        usuarios.splice(index, 1);
-        await fetch(urlUsuarios, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({ ...data.record, usuarios })
-        });
-        cargarUsuarios();
-      } catch (err) {
-        alert("❌ Error al eliminar usuario: " + err.message);
-      }
-    }
-
-    async function forzarLogout(index) {
-      try {
-        const res = await fetch(urlUsuarios + '/latest', { headers });
-        const data = await res.json();
-        data.record.usuarios[index].activo = false;
-        await fetch(urlUsuarios, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify(data.record)
-        });
-        cargarUsuarios();
-      } catch (err) {
-        alert('❌ Error al cerrar sesión: ' + err.message);
-      }
-    }
-
-    async function editarPasswordUsuario() {
-      const nombre = document.getElementById('editar-usuario').value;
-      const nuevaPass = document.getElementById('nueva-pass-editar').value.trim();
-      if (!nuevaPass) return alert("❗ Debes ingresar una nueva contraseña");
-      try {
-        const res = await fetch(urlUsuarios + '/latest', { headers });
-        const data = await res.json();
-        const usuarios = data.record.usuarios;
-        const user = usuarios.find(u => u.usuario === nombre);
-        if (!user) return alert("⚠️ Usuario no encontrado");
-        user.password = nuevaPass;
-        await fetch(urlUsuarios, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({ ...data.record, usuarios })
-        });
-        document.getElementById('nueva-pass-editar').value = '';
-        alert("✅ Contraseña actualizada");
-      } catch (err) {
-        alert("❌ Error al actualizar: " + err.message);
-      }
-    }
-
-    cargarDatos();
-    cargarUsuarios();
   </script>
 </body>
 </html>
