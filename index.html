@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Echo88 Panel Completo</title>
@@ -11,178 +12,248 @@
       --gris-claro: #1a1a1a;
       --borde: #333;
       --blanco: #fff;
-    }* { box-sizing: border-box; margin: 0; padding: 0; }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--gris-oscuro);
+      color: var(--blanco);
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+    }
+    header {
+      background: var(--gris-claro);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--borde);
+    }
+    header h1 { font-size: 1.5rem; color: var(--rosa); }
+    header button {
+      background: none;
+      border: 2px solid var(--rosa);
+      color: var(--rosa);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    header button:hover {
+      background: var(--rosa);
+      color: var(--blanco);
+    }
+    .dashboard {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 2rem;
+      gap: 2rem;
+    }
+    .panel {
+      background: var(--gris-claro);
+      border: 1px solid var(--borde);
+      border-radius: 8px;
+      padding: 1.5rem;
+      flex-grow: 1;
+    }
+    .panel-principal { flex-basis: 60%; min-width: 300px; }
+    .panel-usuarios { flex-basis: 35%; min-width: 250px; }
+    h2 { color: var(--rosa); margin-bottom: 1rem; }
+    textarea, input {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--borde);
+      background: #121212;
+      color: var(--blanco);
+    }
+    label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+    button.save-btn, .toggle-btn {
+      background: var(--rosa);
+      border: none;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    ul { list-style: none; padding: 0; }
+    ul li {
+      background: #191919;
+      margin-bottom: 0.5rem;
+      padding: 0.6rem;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .user-status { font-size: 0.9rem; }
+    .activo { color: limegreen; }
+    .inactivo { color: gray; }
+    .config-panel {
+      display: none;
+      padding: 1.5rem;
+      margin: 2rem;
+      border-radius: 8px;
+      background: var(--gris-claro);
+      border: 1px solid var(--borde);
+    }
+    .config-panel.active { display: block; animation: fade-in 0.3s ease-in-out; }
+    .config-panel h3 { margin-top: 1rem; color: var(--rosa); }
+    .config-panel button { margin-top: 0.5rem; }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      .dashboard { flex-direction: column; padding: 1rem; }
+    }
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--gris-oscuro);
-  color: var(--blanco);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-header {
-  background: var(--gris-claro);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--borde);
-}
-
-header h1 { font-size: 1.5rem; color: var(--rosa); }
-
-header button {
-  background: none;
-  border: 2px solid var(--rosa);
-  color: var(--rosa);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
-
-header button:hover {
-  background: var(--rosa);
-  color: var(--blanco);
-}
-
-.dashboard {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 2rem;
-  gap: 2rem;
-}
-
-.panel {
-  background: var(--gris-claro);
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  padding: 1.5rem;
-  flex-grow: 1;
-}
-
-.panel-principal { flex-basis: 60%; min-width: 300px; }
-.panel-usuarios { flex-basis: 35%; min-width: 250px; }
-
-h2 { color: var(--rosa); margin-bottom: 1rem; }
-textarea, input {
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.6rem;
-  border-radius: 6px;
-  border: 1px solid var(--borde);
-  background: #121212;
-  color: var(--blanco);
-}
-
-label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-
-button.save-btn, .toggle-btn {
-  background: var(--rosa);
-  border: none;
-  color: white;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
-ul { list-style: none; padding: 0; }
-
-ul li {
-  background: #191919;
-  margin-bottom: 0.5rem;
-  padding: 0.6rem;
-  border-radius: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.user-status { font-size: 0.9rem; }
-.activo { color: limegreen; }
-.inactivo { color: gray; }
-
-.config-panel {
-  display: none;
-  padding: 1.5rem;
-  margin: 2rem;
-  border-radius: 8px;
-  background: var(--gris-claro);
-  border: 1px solid var(--borde);
-}
-
-.config-panel.active { display: block; animation: fade-in 0.3s ease-in-out; }
-
-.config-panel h3 { margin-top: 1rem; color: var(--rosa); }
-.config-panel button { margin-top: 0.5rem; }
-
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 768px) {
-  .dashboard { flex-direction: column; padding: 1rem; }
-}
-button {
-  background: var(--rosa);
-  border: none;
-  color: white;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
+    #login-screen {
+      position: fixed;
+      inset: 0;
+      background: black;
+      color: white;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #login-screen input {
+      padding: 0.6rem;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
+      border: none;
+      width: 250px;
+    }
+    #login-screen button {
+      background: var(--rosa);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #login-screen p { margin-top: 1rem; color: tomato; }
   </style>
 </head>
 <body>
+  <div id="login-screen">
+    <h2>Acceso Administrador</h2>
+    <input type="email" id="admin-email" placeholder="Correo">
+    <input type="password" id="admin-password" placeholder="Contraseña">
+    <button onclick="loginAdmin()">Entrar</button>
+    <p id="login-error"></p>
+  </div>
+
   <header>
     <h1><i class="fas fa-sliders-h"></i> Echo88 Dashboard</h1>
-    <button class="toggle-btn" onclick="toggleConfig()">
-      <i class="fas fa-cog"></i> Opciones
-    </button>
-  </header>  <div class="dashboard">
+    <div>
+      <button class="toggle-btn" onclick="toggleConfig()">
+        <i class="fas fa-cog"></i> Opciones
+      </button>
+      <button onclick="logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <div class="dashboard">
     <div class="panel panel-principal">
       <h2><i class="fas fa-bullhorn"></i> Aviso y Canciones Nuevas</h2>
       <label for="aviso">Mensaje de aviso:</label>
-      <input type="text" id="aviso"><label for="canciones">Canciones nuevas (una por línea):</label>
-  <textarea id="canciones" rows="6"></textarea>
+      <input type="text" id="aviso">
+      <label for="canciones">Canciones nuevas (una por línea):</label>
+      <textarea id="canciones" rows="6"></textarea>
+      <label><input type="checkbox" id="mostrarCaja"> Mostrar recuadro lateral</label>
+      <button class="save-btn" onclick="guardarDatos()">💾 Guardar cambios</button>
+      <p id="estado" style="margin-top: 1rem;"></p>
+    </div>
 
-  <label><input type="checkbox" id="mostrarCaja"> Mostrar recuadro lateral</label>
-  <button class="save-btn" onclick="guardarDatos()">💾 Guardar cambios</button>
-  <p id="estado" style="margin-top: 1rem;"></p>
-</div>
+    <div class="panel panel-usuarios">
+      <h2><i class="fas fa-users"></i> Estado de Usuarios</h2>
+      <ul id="user-list"></ul>
+    </div>
+  </div>
 
-<div class="panel panel-usuarios">
-  <h2><i class="fas fa-users"></i> Estado de Usuarios</h2>
-  <ul id="user-list"></ul>
-</div>
-
-  </div>  <div id="configPanel" class="config-panel">
+  <div id="configPanel" class="config-panel">
     <h2>⚙️ Gestión de Usuarios</h2>
     <h3>➕ Crear usuario</h3>
     <input type="text" id="nuevo-usuario" placeholder="Nombre de usuario">
     <input type="password" id="nueva-password" placeholder="Contraseña">
-    <button onclick="crearUsuario()">Crear usuario</button><h3>👤 Lista de usuarios</h3>
-<ul id="admin-user-list"></ul>
+    <button onclick="crearUsuario()">Crear usuario</button>
+    <h3>👤 Lista de usuarios</h3>
+    <ul id="admin-user-list"></ul>
+    <h3>✏️ Editar contraseña de usuario</h3>
+    <select id="editar-usuario"></select>
+    <input type="password" id="nueva-pass-editar" placeholder="Nueva contraseña">
+    <button onclick="editarPasswordUsuario()">Actualizar contraseña</button>
+  </div>
 
-<h3>✏️ Editar contraseña de usuario</h3>
-<select id="editar-usuario"></select>
-<input type="password" id="nueva-pass-editar" placeholder="Nueva contraseña">
-<button onclick="editarPasswordUsuario()">Actualizar contraseña</button>
+  <!-- Firebase SDK -->
+<!-- Firebase SDK clásico (compat) -->
+<script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-auth-compat.js"></script>
 
-  </div>  <script>
+  <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCjwAH-qGLK9KAL9_vfRRtOq0QqnbAuflM",
+    authDomain: "echo-88-admin.firebaseapp.com",
+    projectId: "echo-88-admin",
+    storageBucket: "echo-88-admin.firebasestorage.app",
+    messagingSenderId: "82783662359",
+    appId: "1:82783662359:web:db5031b38b6acdaf874752",
+    measurementId: "G-BJ97K0VNQE"
+  };
+
+  // Inicializar Firebase (modo compat)
+  firebase.initializeApp(firebaseConfig);
+
+    
+function loginAdmin() {
+  const email = document.getElementById('admin-email').value.trim();
+  const password = document.getElementById('admin-password').value.trim();
+  const errorEl = document.getElementById('login-error');
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById('login-screen').style.display = 'none';
+      document.body.style.display = 'flex';
+    })
+    .catch(err => {
+      errorEl.textContent = "❌ " + err.message;
+    });
+}
+
+firebase.auth().onAuthStateChanged(user => {
+  const adminEmail = "admin@tucorreo.com"; // <- tu correo real
+  if (user && user.email === adminEmail) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.body.style.display = 'flex';
+  } else {
+    firebase.auth().signOut();
+    document.getElementById('login-screen').style.display = 'flex';
+    document.body.style.display = 'none';
+  }
+});
+
+function logout() {
+  firebase.auth().signOut().then(() => location.reload());
+}
+
+  
+
+  </script>
+
+  <!-- Tu código original (guardar, cargar, crear usuarios...) -->
+  <script>
     const BIN_ID = '684ce02a8561e97a5023f0e8';
     const BIN_ID_USUARIOS = '684de23a8960c979a5a9f92b';
     const API_KEY = '$2a$10$rOYhULeCIqQqevfSQljVuuaE8F1ckttBnNVRqRJ7sdT4IS8.J.zF.';
-
     const url = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
     const urlUsuarios = `https://api.jsonbin.io/v3/b/${BIN_ID_USUARIOS}`;
     const headers = { 'X-Master-Key': API_KEY, 'Content-Type': 'application/json' };
@@ -195,7 +266,6 @@ button {
       const aviso = document.getElementById('aviso').value.trim();
       const canciones = document.getElementById('canciones').value.trim().split('\n').map(c => c.trim());
       const mostrarCaja = document.getElementById('mostrarCaja').checked;
-
       try {
         const res = await fetch(url, {
           method: 'PUT',
@@ -221,59 +291,51 @@ button {
     }
 
     async function cargarUsuarios() {
-  try {
-    const res = await fetch(urlUsuarios + '/latest', { headers });
-    const data = await res.json();
-    const lista = document.getElementById('user-list');
-    const adminLista = document.getElementById('admin-user-list');
-    const selectEditar = document.getElementById('editar-usuario');
-    lista.innerHTML = '';
-    adminLista.innerHTML = '';
-    selectEditar.innerHTML = '';
-
-    data.record.usuarios.forEach((u, i) => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span>${u.usuario}</span><span class="user-status ${u.activo ? 'activo' : 'inactivo'}">${u.activo ? '🟢 Activo' : '⚪ Inactivo'}</span>`;
-      lista.appendChild(li);
-
-      const adminLi = document.createElement('li');
-      adminLi.innerHTML = `
-        <span>${u.usuario}</span>
-        <div>
-          ${u.activo ? `<button onclick=\"forzarLogout(${i})\">🔓</button>` : ''}
-          <button onclick=\"eliminarUsuario(${i})\">🗑️</button>
-        </div>`;
-      adminLista.appendChild(adminLi);
-
-      const opt = document.createElement('option');
-      opt.value = u.usuario;
-      opt.textContent = u.usuario;
-      selectEditar.appendChild(opt);
-    });
-  } catch (err) {
-    console.error('Error cargando usuarios:', err);
-  }
-}
+      try {
+        const res = await fetch(urlUsuarios + '/latest', { headers });
+        const data = await res.json();
+        const lista = document.getElementById('user-list');
+        const adminLista = document.getElementById('admin-user-list');
+        const selectEditar = document.getElementById('editar-usuario');
+        lista.innerHTML = '';
+        adminLista.innerHTML = '';
+        selectEditar.innerHTML = '';
+        data.record.usuarios.forEach((u, i) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<span>${u.usuario}</span><span class="user-status ${u.activo ? 'activo' : 'inactivo'}">${u.activo ? '🟢 Activo' : '⚪ Inactivo'}</span>`;
+          lista.appendChild(li);
+          const adminLi = document.createElement('li');
+          adminLi.innerHTML = `<span>${u.usuario}</span>
+            <div>
+              ${u.activo ? `<button onclick="forzarLogout(${i})">🔓</button>` : ''}
+              <button onclick="eliminarUsuario(${i})">🗑️</button>
+            </div>`;
+          adminLista.appendChild(adminLi);
+          const opt = document.createElement('option');
+          opt.value = u.usuario;
+          opt.textContent = u.usuario;
+          selectEditar.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Error cargando usuarios:', err);
+      }
+    }
 
     async function crearUsuario() {
       const nombre = document.getElementById('nuevo-usuario').value.trim();
       const pass = document.getElementById('nueva-password').value.trim();
       if (!nombre || !pass) return alert("⚠️ Ingrese nombre y contraseña");
-
       try {
         const res = await fetch(urlUsuarios + '/latest', { headers });
         const data = await res.json();
         const usuarios = data.record.usuarios;
-
         if (usuarios.some(u => u.usuario === nombre)) return alert("❌ Ese usuario ya existe");
-
         usuarios.push({ usuario: nombre, password: pass, activo: false });
         await fetch(urlUsuarios, {
           method: 'PUT',
           headers,
           body: JSON.stringify({ ...data.record, usuarios })
         });
-
         document.getElementById('nuevo-usuario').value = '';
         document.getElementById('nueva-password').value = '';
         cargarUsuarios();
@@ -315,35 +377,32 @@ button {
         alert('❌ Error al cerrar sesión: ' + err.message);
       }
     }
-    
 
-async function editarPasswordUsuario() {
-  const nombre = document.getElementById('editar-usuario').value;
-  const nuevaPass = document.getElementById('nueva-pass-editar').value.trim();
-  if (!nuevaPass) return alert("❗ Debes ingresar una nueva contraseña");
-
-  try {
-    const res = await fetch(urlUsuarios + '/latest', { headers });
-    const data = await res.json();
-    const usuarios = data.record.usuarios;
-    const user = usuarios.find(u => u.usuario === nombre);
-    if (!user) return alert("⚠️ Usuario no encontrado");
-
-    user.password = nuevaPass;
-    await fetch(urlUsuarios, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify({ ...data.record, usuarios })
-    });
-
-    document.getElementById('nueva-pass-editar').value = '';
-    alert("✅ Contraseña actualizada");
-  } catch (err) {
-    alert("❌ Error al actualizar: " + err.message);
-  }
-}
+    async function editarPasswordUsuario() {
+      const nombre = document.getElementById('editar-usuario').value;
+      const nuevaPass = document.getElementById('nueva-pass-editar').value.trim();
+      if (!nuevaPass) return alert("❗ Debes ingresar una nueva contraseña");
+      try {
+        const res = await fetch(urlUsuarios + '/latest', { headers });
+        const data = await res.json();
+        const usuarios = data.record.usuarios;
+        const user = usuarios.find(u => u.usuario === nombre);
+        if (!user) return alert("⚠️ Usuario no encontrado");
+        user.password = nuevaPass;
+        await fetch(urlUsuarios, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({ ...data.record, usuarios })
+        });
+        document.getElementById('nueva-pass-editar').value = '';
+        alert("✅ Contraseña actualizada");
+      } catch (err) {
+        alert("❌ Error al actualizar: " + err.message);
+      }
+    }
 
     cargarDatos();
     cargarUsuarios();
-  </script></body>
+  </script>
+</body>
 </html>
